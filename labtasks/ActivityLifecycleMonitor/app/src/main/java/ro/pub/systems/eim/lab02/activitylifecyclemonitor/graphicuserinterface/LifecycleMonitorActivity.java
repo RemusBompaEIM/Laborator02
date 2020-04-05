@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
@@ -62,7 +63,76 @@ public class LifecycleMonitorActivity extends AppCompatActivity {
         Button cancelButton = (Button) findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(buttonClickListener);
 
-        Log.d(Constants.TAG, "onCreate() method was invoked without a previous state");
+        if(savedInstanceState == null)
+            Log.d(Constants.TAG, "onCreate() method was invoked without a previous state");
+        else {
+            Log.d(Constants.TAG, "onCreate() method was invoked with a previous state");
+            EditText usernameEditText = (EditText)findViewById(R.id.username_edit_text);
+            EditText passwordEditText = (EditText)findViewById(R.id.password_edit_text);
+            CheckBox checkbox = (CheckBox)findViewById(R.id.remember_me_checkbox);
+            usernameEditText.setText(savedInstanceState.getString(Constants.USERNAME_EDIT_TEXT));
+            passwordEditText.setText(savedInstanceState.getString(Constants.PASSWORD_EDIT_TEXT));
+            checkbox.setChecked(savedInstanceState.getBoolean(Constants.REMEMBER_ME_CHECKBOX));
+        }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(Constants.TAG, "OnStart method was invoked");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(Constants.TAG, "OnResume method was invoked");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(Constants.TAG, "OnPause method was invoked");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(Constants.TAG, "OnStop method was invoked");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(Constants.TAG, "OnDestroy method was invoked");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(Constants.TAG, "OnRestart method was invoked");
+    }
+
+    // metode folosite pentru salvarea si restaurarea starii
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        // apelarea metodei din activitatea parinte este recomandata, dar nu obligatorie
+        super.onSaveInstanceState(savedInstanceState);
+        CheckBox checkbox = (CheckBox)findViewById(R.id.remember_me_checkbox);
+        if(checkbox.isChecked()){
+            EditText usernameEditText = (EditText)findViewById(R.id.username_edit_text);
+            EditText passwordEditText = (EditText)findViewById(R.id.password_edit_text);
+            String username = usernameEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
+            savedInstanceState.putString(Constants.USERNAME_EDIT_TEXT, username);
+            savedInstanceState.putString(Constants.PASSWORD_EDIT_TEXT, password);
+            savedInstanceState.putBoolean(Constants.REMEMBER_ME_CHECKBOX, checkbox.isChecked());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        // apelarea metodei din activitatea parinte este recomandata, dar nu obligatorie
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 }
